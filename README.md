@@ -1,284 +1,254 @@
-PR2 — Artificial Neural Network for Adult Income Classification
-Deep Learning Project | Binary Classification | Adult Income Dataset
+<div align="center">PR2 | Adult Income Classification with Artificial Neural Networks
+A structured Deep Learning study of ANN architecture, activation functions, weight initialization, loss functions, batch normalization, and optimizers.
 
-This repository contains a seven-task practical study of Artificial Neural Networks (ANNs) for predicting whether an individual's annual income is greater than $50K or $50K or less, using demographic and employment-related attributes from the Adult Income dataset.
 
-The notebook focuses on how data preparation, network design, activation functions, weight initialization, loss functions, batch normalization, and optimizers affect ANN training and evaluation.
-Table of Contents
-- Project Overview
-- Problem Statement
-- Dataset
-- Technologies and Libraries
-- ANN Architecture
-- Project Workflow
-- Seven Tasks Covered
-- Graphs and Visual Analysis
-- Evaluation Metrics
-- How to Run the Project
-- Project Structure
-- Important Implementation Notes
-- Learning Outcomes
-- Future Improvements
-- Author
-📌 Project Overview
-An Artificial Neural Network (ANN) is a deep learning model inspired by the way biological neurons process information. In this project, a feedforward ANN is trained on tabular data to perform a binary classification task.
 
-The project is organized into seven tasks, moving from data understanding and preprocessing to model experimentation and optimizer comparison.
-Item	Details
-Project	PR2 — Artificial Neural Network
-Domain	Machine Learning / Deep Learning
-Problem type	Binary classification
-Dataset	Adult Income Dataset (adult.csv)
+
+
+</div>1. Project Overview
+This project implements and evaluates Artificial Neural Networks (ANNs) for a binary classification problem using the Adult Census Income dataset.
+
+The objective is to predict whether an individual's annual income is:
+- Class 0: <=50K
+- Class 1: >50K
+Instead of building only one model, this project is organized into seven practical tasks. Each task explores a different part of the deep-learning workflow, from data preparation to optimizer comparison and final model evaluation.
+
+Project focus: understand how ANN design choices influence training behaviour and classification performance through structured experiments.
+2. Problem Definition
+Item	Description
+Problem type	Supervised binary classification
+Dataset	Adult Census Income
+Input	Demographic and employment-related attributes
 Target column	income
-Target classes	<=50K and >50K
-Main model	Feedforward ANN
-Baseline hidden layers	128 and 64 neurons
-Baseline hidden activation	ReLU
-Baseline output activation	Sigmoid
-Baseline loss	Binary Cross-Entropy
-Baseline optimizer	Adam
-Notebook	PR2.ipynb
+Positive class	>50K
+Negative class	<=50K
+Model family	Feedforward Artificial Neural Network
+Main framework	TensorFlow / Keras
+Main notebook	PR2_Improved.ipynb
 
 
-🎯 Problem Statement
-The objective is to build a neural network that learns patterns from input attributes and predicts the income category:
-- Class 0: Income is <=50K
-- Class 1: Income is >50K
-This is supervised learning because the dataset contains input features along with known target labels.
-📂 Dataset
-The notebook reads the dataset from a local CSV file:
-df = pd.read_csv("adult.csv")
-The target column is income. The notebook removes whitespace, replaces ? with missing values, drops rows containing missing values, and removes the fnlwgt and education columns before modeling.
+3. Dataset
+The notebook expects a local file named adult.csv.
+
+Dataset source: UCI Machine Learning Repository — Adult
 Data preparation performed
-1. Load adult.csv using Pandas.
-2. Strip leading and trailing spaces from text columns.
-3. Replace ? with NaN.
-4. Remove rows with missing values.
-5. Drop fnlwgt and education.
-6. Remove a trailing period from income labels, when present.
-7. Convert the target to binary values (>50K = 1, otherwise 0).
-8. One-hot encode categorical input columns.
-9. Standardize selected numerical columns.
-10. Split the data into training and testing sets using an 80:20 split, random_state=42, and stratification.
-Numerical columns standardized
-- age
-- educational-num
-- capital-gain
-- capital-loss
-- hours-per-week
-Dataset note: The CSV is not included in this README. Add your permitted copy of adult.csv to the project folder before running the notebook. Final row and feature counts depend on the exact CSV version and rows removed during cleaning.
+1. Load the CSV file using Pandas.
+2. Inspect dataset shape, columns, data types, and missing values.
+3. Remove extra spaces from text values.
+4. Replace ? markers with missing values.
+5. Remove rows containing missing values.
+6. Drop fnlwgt and education; retain educational-num.
+7. Clean the target labels and encode >50K as 1, otherwise 0.
+8. One-hot encode categorical input features.
+9. Standardize numerical features.
+10. Split the data using stratification for class balance.
+Numerical features standardized
+age, educational-num, capital-gain, capital-loss, hours-per-week
+Dataset availability: adult.csv is not bundled in this README package. Download the dataset from the source above and place the CSV beside the notebook. Check the dataset's terms before redistributing it.
 
-🛠️ Technologies and Libraries
-Programming languages
-Language	Use
-Python	Main language for data processing, model building, training, and evaluation
-Markdown	Project documentation
+4. Technology Stack
+Programming language
+Language	Role
+Python	Primary programming language used for data preparation, ANN implementation, training, evaluation, and visualization
 
 
-Libraries and tools
-Library / Tool	Purpose
-Pandas	Loading, cleaning, and manipulating tabular data
-NumPy	Numerical operations and array handling
-Matplotlib	Training curves and plots
-Seaborn	EDA plots and correlation heatmap
-Scikit-learn	Train/test split, scaling, class weights, and evaluation metrics
-TensorFlow	Deep learning framework
-Keras (tf.keras)	Building, compiling, and training ANN models
-Jupyter Notebook	Interactive implementation
+Libraries, frameworks, and tools
+Technology	Role in this project
+Pandas	Data loading, cleaning, and tabular data manipulation
+NumPy	Numerical operations, arrays, and custom loss calculations
+Matplotlib	Training curves and experiment plots
+Seaborn	Statistical visualizations and correlation heatmap
+Scikit-learn	Data splitting, feature scaling, class weights, and evaluation metrics
+TensorFlow	Deep-learning framework and tensor operations
+Keras (tf.keras)	ANN layers, model compilation, callbacks, and optimizers
+Jupyter Notebook	Interactive environment for the seven tasks
+Git & GitHub	Version control and project hosting
 
 
-Install dependencies:
-pip install pandas numpy matplotlib seaborn scikit-learn tensorflow jupyter
-🧠 ANN Architecture
-The baseline ANN uses two hidden layers and one output layer.
-
-Layer	Configuration	Purpose
-Input	Encoded input features	Receives preprocessed data
-Hidden layer 1	128 neurons, ReLU	Learns first-level patterns
+File formats: Markdown (.md) is used for documentation, CSV (.csv) for tabular data, and Jupyter Notebook (.ipynb) for experiments. These are file/document formats, not additional programming languages used to build the model.
+5. ANN Architecture
+The baseline network uses two hidden Dense layers and one sigmoid output layer.
+<p align="center">
+  <img src="assets/ann_architecture.png" alt="Baseline ANN architecture" width="88%">
+</p>Layer	Configuration	Purpose
+Input	Encoded feature vector	Receives preprocessed features
+Hidden layer 1	128 neurons, ReLU	Learns intermediate patterns
 Hidden layer 2	64 neurons, ReLU	Learns higher-level patterns
-Output layer	1 neuron, Sigmoid	Produces probability for the >50K class
+Output	1 neuron, Sigmoid	Returns probability of income >50K
 
 
-The baseline model uses Adam and Binary Cross-Entropy. The classification threshold in the notebook is 0.5.
-🔄 Project Workflow
+Baseline configuration: Binary Cross-Entropy loss, Adam optimizer, batch size 64, and up to 50 epochs. Early stopping is used to monitor validation loss and restore the best weights.
+6. End-to-End Workflow
 ```mermaid
 flowchart TD
-    A["Adult Income CSV"] --> B["Data Cleaning"]
-    B --> C["EDA and Visualization"]
-    C --> D["Encode Categorical Features"]
-    D --> E["Scale Numerical Features"]
-    E --> F["Stratified Train/Test Split"]
-    F --> G["Build Baseline ANN"]
-    G --> H["Tasks 3–7 Experiments"]
-    H --> I["Evaluate Models"]
-    I --> J["Compare Metrics and Curves"]
+    A["Adult Census Income CSV"] --> B["Data inspection and cleaning"]
+    B --> C["Exploratory Data Analysis"]
+    C --> D["Target encoding and one-hot encoding"]
+    D --> E["Feature scaling and data splitting"]
+    E --> F["Baseline ANN"]
+    F --> G["Tasks 3–7: controlled experiments"]
+    G --> H["Validation-based comparison"]
+    H --> I["Final model evaluation"]
+    I --> J["Metrics, plots and conclusions"]
 ```
-📚 Seven Tasks Covered
-Task 1 — Data Loading, Cleaning and EDA
-- Load the Adult Income CSV.
-- Inspect rows, data types, and missing values.
-- Clean text fields and handle missing values.
-- Remove selected columns.
-- Convert income labels into binary values.
-- Visualize age distribution, working hours, education number, and numeric correlations.
-- Encode categorical features and scale selected numerical features.
-- Create a stratified train/test split.
-Task 2 — Baseline ANN
-- Create a reusable ANN-building function.
-- Build a network with hidden layers of 128 and 64 neurons.
-- Use ReLU in hidden layers and Sigmoid in the output layer.
+7. Seven Tasks and Experiments
+Task 1 — Data Loading, Cleaning & EDA
+- Load and inspect the Adult Income dataset.
+- Handle whitespace, missing-value markers, and selected columns.
+- Encode the target into binary classes.
+- Explore age, working hours, education number, and numerical correlations.
+- Encode categorical features and standardize numerical features.
+- Prepare stratified data splits for model development and evaluation.
+Task 2 — Baseline Artificial Neural Network
+- Build a reusable ANN model function.
+- Create a feedforward network with 128 and 64 ReLU neurons.
+- Use a single sigmoid output neuron.
 - Compile with Adam and Binary Cross-Entropy.
-- Train for up to 50 epochs with batch size 64 and a 10% validation split.
-- Evaluate using accuracy, precision, recall, F1-score, classification report, and confusion matrix.
+- Train with batch size 64 for up to 50 epochs.
+- Apply Early Stopping based on validation loss.
+- Evaluate using classification metrics and a confusion matrix.
 - Plot training and validation accuracy/loss.
 Task 3 — Activation Function Comparison
 The notebook compares four activation functions:
-Activation	Main characteristic
+Activation	Key behaviour
 ReLU	Zero for negative inputs; linear for positive inputs
-Tanh	Outputs values between -1 and 1
-Sigmoid	Outputs values between 0 and 1
+Tanh	Output range from -1 to 1
+Sigmoid	Output range from 0 to 1
 ELU	Smooth negative region and linear positive region
 
 
-Additional experiments:
-- Compare training and validation accuracy.
-- Compare F1-scores.
-- Inspect ReLU hidden-layer activations for zero-valued outputs.
-- Inspect gradient magnitudes in the Sigmoid model.
-
-This graph shows the mathematical shapes of the activation functions; it is not a plot of measured model performance.
-Task 4 — Weight Initialization
-Five initializers are compared:
-Initializer	Purpose
-glorot_uniform	Glorot/Xavier uniform initialization
-glorot_normal	Glorot/Xavier normal initialization
-he_uniform	He uniform initialization
-he_normal	He normal initialization
-zeros	Zero initialization experiment
+Experiments include validation accuracy/F1 comparison, learning curves, zero-valued ReLU activation inspection, and sigmoid gradient-flow analysis.
+<p align="center">
+  <img src="assets/activation_functions.png" alt="Mathematical activation function curves" width="82%">
+</p>
+The figure shows theoretical activation-function curves, not measured model-performance results.
+Task 4 — Weight Initialization Techniques
+Five initialization methods are evaluated:
+Initializer	Description
+Glorot / Xavier Uniform	Uniform initialization based on input and output dimensions
+Glorot / Xavier Normal	Normal-distribution Glorot initialization
+He Uniform	Uniform initialization commonly used with ReLU
+He Normal	Normal-distribution He initialization
+Zeros	Zero initialization experiment
 
 
-The notebook stores initial and trained weights, compares validation accuracy and F1-score, examines convergence curves, demonstrates zero-initialization behavior, and visualizes weight distributions before and after training.
+The task compares convergence, validation metrics, initial and trained weights, and weight distributions. It also demonstrates why initializing every weight to zero is problematic for hidden-layer learning.
 Task 5 — Loss Function Comparison
-Four loss approaches are explored:
-Loss	Project use
-Binary Cross-Entropy (BCE)	Baseline binary classification loss
-Mean Squared Error (MSE)	Comparison with a regression-oriented loss
-Weighted BCE	Uses class weights to account for class imbalance
-Focal Loss	Gives more emphasis to harder examples
-
-
-The notebook compares F1-scores and identifies the best-performing loss according to that metric.
+Four loss approaches are studied:
+1. Binary Cross-Entropy (BCE) — standard loss for binary classification.
+2. Mean Squared Error (MSE) — comparison with a loss commonly used in regression.
+3. Weighted Binary Cross-Entropy — incorporates class weights calculated from training labels.
+4. Focal Loss — emphasizes difficult-to-classify examples; configured with gamma=2.0 and alpha=0.25 in the notebook.
+The experiments compare model behaviour and F1-score.
 Task 6 — Batch Normalization
-This task investigates how Batch Normalization affects neural network training.
-
-Experiments include:
-- Build and train an ANN with Batch Normalization.
-- Compare baseline and Batch Normalization validation loss and accuracy.
-- Compare Batch Normalization placement relative to activation.
-- Inspect learned gamma and beta parameters.
-- Visualize learned scaling and shifting parameters.
-- Review moving mean and moving variance.
-Task 7 — Optimizer Comparison and Final ANN
-The notebook compares five optimizer configurations:
+- Add Batch Normalization to hidden layers.
+- Compare baseline and Batch Normalization learning curves.
+- Investigate Batch Normalization placement before and after activation.
+- Inspect the learned gamma and beta parameters.
+- Examine moving mean and moving variance.
+Task 7 — Optimizer, Convergence & Final Comparison
+Five optimizer configurations are explored:
 Optimizer	Configuration
 SGD	Standard stochastic gradient descent
-SGD Momentum	SGD with momentum = 0.9
+SGD + Momentum	Momentum set to 0.9
 RMSprop	Adaptive learning-rate optimizer
-Adam	Adam optimizer
-Adam Explicit	Adam with learning rate 0.001, beta1 0.9, beta2 0.999
+Adam	Adaptive moment estimation
+Adam (explicit)	Learning rate 0.001, beta values 0.9 and 0.999
 
 
-Further experiments:
-- Compare validation accuracy across 50 epochs.
-- Record the first epoch crossing the 83% validation-accuracy reference, if reached.
-- Compare final test accuracy and F1-score.
-- Compare SGD and Adam learning-rate sensitivity.
-- Train a final combined ANN and calculate accuracy, precision, recall, F1-score, and ROC-AUC.
-- Plot final training and validation curves.
-The notebook's measured scores are generated when it is executed. No fixed accuracy or “best optimizer” result is claimed here because values depend on the actual run.
+Additional experiments compare convergence across epochs, SGD/Adam learning-rate sensitivity, validation metrics, and a final ANN evaluation using accuracy, precision, recall, F1-score, and ROC-AUC.
+8. Evaluation Metrics
+Metric	What it measures
+Accuracy	Overall proportion of correct predictions
+Precision	How many predicted >50K cases are actually >50K
+Recall	How many actual >50K cases are correctly identified
+F1-score	Balance between precision and recall
+ROC-AUC	Ability to distinguish between the two income classes
+Confusion Matrix	Correct and incorrect predictions for each class
 
-📊 Graphs and Visual Analysis
-The notebook generates these experiment plots when its cells are run:
-Task	Graphs / Visualizations
-Task 1	Age distribution, working-hours boxplot, education countplot, correlation heatmap
+
+Because income classes may be imbalanced, accuracy should not be interpreted alone. Precision, recall, F1-score, and ROC-AUC provide a more complete evaluation.
+Experiment Results
+Populate this table with the actual outputs from your completed notebook run. No estimated scores are presented as experimental results.
+Experiment	Validation Accuracy	Precision	Recall	F1-score	ROC-AUC
+Baseline ANN	—	—	—	—	—
+Activation comparison winner	—	—	—	—	—
+Initialization comparison winner	—	—	—	—	—
+Loss comparison winner	—	—	—	—	—
+Batch Normalization ANN	—	—	—	—	—
+Final ANN	—	—	—	—	—
+
+
+9. Visualizations Generated by the Notebook
+Task	Visual analysis
+Task 1	Age distribution, working-hours boxplot, education count plot, correlation heatmap
 Task 2	Training/validation accuracy and loss, confusion matrix
-Task 3	Activation comparison curves, ReLU activation distribution, gradient magnitude
-Task 4	Initializer convergence, zero-initialization behavior, weight distributions
-Task 5	Loss comparison curves and F1-score summary
-Task 6	Baseline vs BatchNorm curves, BatchNorm position, gamma and beta plots
-Task 7	Optimizer convergence, learning-rate sensitivity, final ANN accuracy/loss
+Task 3	Activation learning curves, ReLU activation analysis, sigmoid gradient analysis
+Task 4	Initializer convergence, zero-initialization behaviour, weight distributions
+Task 5	Loss comparison and F1-score comparison
+Task 6	Baseline vs BatchNorm curves, BatchNorm placement, gamma/beta analysis
+Task 7	Optimizer convergence, learning-rate sensitivity, final evaluation plots
 
 
-To include your actual experiment graphs in this README, save the plots from the executed notebook into assets/ and link them here. Do not substitute illustrative curves for measured results.
-📏 Evaluation Metrics
-Metric	Meaning
-Accuracy	Overall fraction of correct predictions
-Precision	Fraction of predicted positive cases that are actually positive
-Recall	Fraction of actual positive cases correctly identified
-F1-score	Harmonic mean of precision and recall
-ROC-AUC	Measures how well the model separates the two classes
-Confusion Matrix	Shows correct and incorrect predictions for each class
-
-
-For an imbalanced dataset, accuracy alone may be misleading. Precision, recall, F1-score, and ROC-AUC provide additional information.
-▶️ How to Run the Project
-1. Clone the repository
-git clone https://github.com/pmanan2031-web/PR2-ANN.git
-cd PR2-ANN
-2. Create and activate a virtual environment (recommended)
+To showcase the measured experiments on GitHub, save the notebook's actual output plots into assets/ and embed them in this section. The two included figures are explanatory diagrams, not measured experiment results.
+10. Installation & Execution
+Step 1 — Clone the repository
+git clone <YOUR_REPOSITORY_URL>
+cd <YOUR_PROJECT_FOLDER>
+Step 2 — Create a virtual environment (recommended)
 Windows PowerShell:
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-3. Install dependencies
-pip install pandas numpy matplotlib seaborn scikit-learn tensorflow jupyter
-4. Add the dataset
-Ensure adult.csv is in the same folder as PR2.ipynb.
-5. Launch Jupyter Notebook
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+Step 3 — Install dependencies
+python -m pip install --upgrade pip
+python -m pip install pandas numpy matplotlib seaborn scikit-learn tensorflow jupyter
+Step 4 — Add the dataset
+Place adult.csv in the same directory as PR2_Improved.ipynb.
+Step 5 — Start Jupyter Notebook
 jupyter notebook
-Open PR2.ipynb and run the cells in order.
-Training multiple ANN experiments can take time. Use a TensorFlow-compatible Python environment and verify the TensorFlow installation if import fails.
-
-📁 Project Structure
-PR2-ANN/
+Open PR2_Improved.ipynb and execute the cells from top to bottom. Later tasks depend on variables and models created earlier.
+11. Repository Structure
+PR2-Adult-Income-ANN/
 │
-├── PR2.ipynb
+├── PR2_Improved.ipynb
 ├── adult.csv
 ├── README.md
 │
 └── assets/
     ├── ann_architecture.png
     └── activation_functions.png
-If you do not have permission to redistribute the dataset, do not upload adult.csv to a public repository; document where it can be obtained instead.
-⚠️ Important Implementation Notes
-Before presenting final scores as portfolio results, review these points in the notebook:
-1. Avoid data leakage: Task 1 currently fits StandardScaler before the train/test split. For a leakage-safe workflow, split first, fit the scaler only on X_train, and use transform() on validation/test data.
-2. Keep final evaluation consistent: Generate final predictions from X_test and compare them with y_test. Do not compare validation predictions with test labels.
-3. Final loss selection: Task 7 checks whether Weighted BCE improves F1, but the final model builder is called with Binary Cross-Entropy. If you intend to select the loss dynamically, pass the selected loss into the final model and verify the class-weight logic.
-4. Fair comparisons: Use the same data split and comparable training settings across experiments. For stronger conclusions, repeat experiments with multiple random seeds.
-5. Report real outputs: Copy accuracy, precision, recall, F1-score, ROC-AUC, and confusion-matrix values from a completed run. Do not use estimated or illustrative metrics.
-🎓 Learning Outcomes
-By completing this project, you practice:
+If dataset redistribution is not permitted, do not commit adult.csv to a public repository. Include dataset download instructions instead.
+12. Key Learning Outcomes
+By completing this project, the following concepts are practiced:
 - Data cleaning and exploratory data analysis.
-- Encoding categorical variables and scaling numerical features.
-- Building a feedforward ANN using Keras.
-- Understanding activation functions and gradient behavior.
-- Comparing weight initialization techniques.
-- Understanding loss functions for binary classification and class imbalance.
+- Encoding categorical features and scaling numerical features.
+- Designing and training feedforward neural networks.
+- Understanding activation functions and gradient flow.
+- Comparing weight initialization strategies.
+- Understanding loss functions and class imbalance.
 - Applying Batch Normalization.
-- Comparing optimizers and learning rates.
-- Evaluating classification models using multiple metrics.
-- Communicating experiments with tables and visualizations.
-🚀 Future Improvements
-- Add dropout and L1/L2 regularization experiments.
-- Apply early stopping and learning-rate scheduling.
-- Tune hyperparameters with Keras Tuner or randomized search.
-- Compare ANN performance with Logistic Regression, Random Forest, and Gradient Boosting.
-- Add threshold tuning and precision-recall curve analysis.
-- Save the trained model and build a Streamlit prediction interface.
-- Add automated tests and a reproducible requirements file.
-👨‍💻 Author
+- Comparing optimizers and learning-rate behaviour.
+- Evaluating binary classifiers with multiple metrics.
+- Communicating model experiments through tables and plots.
+13. Future Improvements
+- Use a preprocessing pipeline with imputers instead of dropping every row containing missing data.
+- Tune the classification threshold using validation data.
+- Repeat experiments with multiple random seeds and report mean and standard deviation.
+- Add systematic hyperparameter tuning with Keras Tuner.
+- Save the final model and preprocessing objects for reproducible inference.
+- Build a Streamlit interface for interactive predictions.
+- Explore model explainability with permutation importance or SHAP.
+14. Reproducibility & Evaluation Notes
+Before publishing final model scores, verify the following:
+1. Prevent data leakage: fit the scaler only on training data; apply the fitted scaler to validation and test data.
+2. Use the correct evaluation split: generate final test predictions from X_test and compare them with y_test.
+3. Select models using validation data: keep the test set for final evaluation only.
+4. Compare experiments fairly: keep data splits and training settings consistent.
+5. Report measured values only: fill the results table from the executed notebook, not estimated values.
+15. Author
 Manan Patel
-- GitHub: pmanan2031-web
-⭐ If you find this project useful, consider giving the repository a star.
+- GitHub: @pmanan2031-web
+<div align="center">Built with Python · TensorFlow · Keras · Scikit-learn
 
-Built with Python, TensorFlow, Keras, and a continuous learning mindset.
+Learn the fundamentals. Experiment with purpose. Evaluate with evidence.
+</div>
